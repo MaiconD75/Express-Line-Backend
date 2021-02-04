@@ -1,0 +1,18 @@
+import { EntityRepository, Repository } from 'typeorm';
+
+import AppError from '../../error/AppError';
+import Recipient from '../models/Recipient';
+
+@EntityRepository(Recipient)
+class RecipientRepository extends Repository<Recipient> {
+  public async findById(id: string): Promise<Recipient | undefined> {
+    try {
+      const recipient = await this.findOne(id);
+      return recipient;
+    } catch {
+      throw new AppError('This is a invalid id');
+    }
+  }
+}
+
+export default RecipientRepository;

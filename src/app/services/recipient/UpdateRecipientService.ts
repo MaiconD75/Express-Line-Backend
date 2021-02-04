@@ -1,0 +1,51 @@
+import { getCustomRepository } from 'typeorm';
+
+import Recipient from '../../data/models/Recipient';
+import RecipientRepository from '../../data/repositories/RecipientRepository';
+import AppError from '../../error/AppError';
+
+interface Request {
+  id: string;
+  name?: string;
+  street?: string;
+  number?: number;
+  complement?: string;
+  city?: string;
+  state?: string;
+  zip_code?: number;
+}
+
+class UpdateRecipientService {
+  public async execute({
+    id,
+    name,
+    street,
+    number,
+    complement,
+    city,
+    state,
+    zip_code,
+  }: Request): Promise<Recipient> {
+    const recipientsRepository = getCustomRepository(RecipientRepository);
+
+    const recipient = await recipientsRepository.findById(id);
+
+    if (!recipient) {
+      throw new AppError('This recipient does not exist');
+    }
+
+    recipient.name = name || recipient.name;
+    recipient.street = street || recipient.street;
+    recipient.number = number || recipient.number;
+    recipient.complement = complement || recipient.complement;
+    recipient.city = city || recipient.city;
+    recipient.state = state || recipient.state;
+    recipient.zip_code = zip_code || recipient.zip_code;
+
+    await recipientsRepository.save(recipient);
+
+    return recipient;
+  }
+}
+
+export default UpdateRecipientService;
