@@ -35,20 +35,24 @@ class RecipientsController {
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const recipientId = request.params.id;
+    const user_id = request.user.id;
 
     const deleteRecipientService = new DeleteRecipientService();
-    await deleteRecipientService.execute(id);
+    await deleteRecipientService.execute({ recipientId, user_id });
 
     return response.json({ deleted: true });
   }
 
   public async index(request: Request, response: Response): Promise<Response> {
     const recipientId = request.params.id;
-    const { id } = request.user;
+    const user_id = request.user.id;
 
     const getRecipientService = new GetRecipientService();
-    const recipient = await getRecipientService.execute(recipientId, id);
+    const recipient = await getRecipientService.execute({
+      recipientId,
+      user_id,
+    });
 
     return response.json(recipient);
   }
@@ -63,7 +67,8 @@ class RecipientsController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const recipientId = request.params.id;
+    const user_id = request.user.id;
     const {
       name,
       street,
@@ -76,7 +81,8 @@ class RecipientsController {
 
     const updateRecipientService = new UpdateRecipientService();
     const recipient = await updateRecipientService.execute({
-      id,
+      recipientId,
+      user_id,
       name,
       street,
       number,

@@ -1,15 +1,17 @@
 import { Router } from 'express';
 
-import UsersRouter from './users.routes';
 import DeliverymenRouter from './deliverymen.routes';
+import OriginsRouter from './origins.routes';
 import RecipientsRouter from './recipients.routes';
 import SessionsRouter from './sessions.routes';
+import UsersRouter from './users.routes';
 
 const routes = Router();
 
-routes.use('/users', UsersRouter);
 routes.use('/deliverymen', DeliverymenRouter);
+routes.use('/origins', OriginsRouter);
 routes.use('/recipients', RecipientsRouter);
 routes.use('/sessions', SessionsRouter);
+routes.use('/users', UsersRouter);
 
 export default routes;
