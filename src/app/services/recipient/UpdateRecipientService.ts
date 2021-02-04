@@ -5,7 +5,8 @@ import RecipientRepository from '../../data/repositories/RecipientRepository';
 import AppError from '../../error/AppError';
 
 interface Request {
-  id: string;
+  recipientId: string;
+  user_id: string;
   name?: string;
   street?: string;
   number?: number;
@@ -17,7 +18,8 @@ interface Request {
 
 class UpdateRecipientService {
   public async execute({
-    id,
+    recipientId,
+    user_id,
     name,
     street,
     number,
@@ -28,10 +30,17 @@ class UpdateRecipientService {
   }: Request): Promise<Recipient> {
     const recipientsRepository = getCustomRepository(RecipientRepository);
 
-    const recipient = await recipientsRepository.findById(id);
+    const recipient = await recipientsRepository.findById(recipientId);
 
     if (!recipient) {
       throw new AppError('This recipient does not exist');
+    }
+
+    if (recipient.user_id !== user_id) {
+      throw new AppError(
+        'You does not have permission to delete this recipient',
+        401,
+      );
     }
 
     recipient.name = name || recipient.name;
