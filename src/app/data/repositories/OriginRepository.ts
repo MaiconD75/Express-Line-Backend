@@ -5,9 +5,14 @@ import Origin from '../models/Origin';
 
 @EntityRepository(Origin)
 class OriginRepository extends Repository<Origin> {
-  public async findById(id: string): Promise<Origin | undefined> {
+  public async findById(id: string): Promise<Origin> {
     try {
       const origin = await this.findOne(id);
+
+      if (!origin) {
+        throw new AppError('This origin does not exist');
+      }
+
       return origin;
     } catch {
       throw new AppError(`This origin's id is an invalid id`);

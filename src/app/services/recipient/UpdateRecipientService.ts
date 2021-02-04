@@ -32,10 +32,6 @@ class UpdateRecipientService {
 
     const recipient = await recipientsRepository.findById(recipientId);
 
-    if (!recipient) {
-      throw new AppError('This recipient does not exist');
-    }
-
     if (recipient.user_id !== user_id) {
       throw new AppError(
         'You does not have permission to delete this recipient',

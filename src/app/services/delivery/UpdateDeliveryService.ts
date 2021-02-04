@@ -16,7 +16,6 @@ interface Request {
   recipient_id?: string;
   product?: string;
 }
-
 class UpdateDeliveryService {
   public async execute({
     user_id,
@@ -30,10 +29,6 @@ class UpdateDeliveryService {
 
     const delivery = await deliveriesRepository.findById(deliveryId);
 
-    if (!delivery) {
-      throw new AppError('This delivery does not exist');
-    }
-
     if (delivery.user_id !== user_id) {
       throw new AppError(
         'You does not have permission to delete this delivery',
@@ -41,43 +36,31 @@ class UpdateDeliveryService {
       );
     }
 
-    if (deliveryman_id) {
-      const deliverymenRepository = getCustomRepository(DeliverymanRepository);
-      const deliveryman = await deliverymenRepository.findById(deliveryman_id);
+    const deliverymenRepository = getCustomRepository(DeliverymanRepository);
+    const deliveryman = await deliverymenRepository.findById(
+      deliveryman_id || delivery.deliveryman_id,
+    );
 
-      if (!deliveryman) {
-        throw new AppError('This deliveryman does not exist');
-      }
-
-      if (deliveryman.user_id !== user_id) {
-        throw new AppError('You does not have this deliveryman');
-      }
+    if (deliveryman.user_id !== user_id) {
+      throw new AppError('You does not have this deliveryman');
     }
 
-    if (origin_id) {
-      const originsRepository = getCustomRepository(OriginRepository);
-      const origin = await originsRepository.findById(origin_id);
+    const originsRepository = getCustomRepository(OriginRepository);
+    const origin = await originsRepository.findById(
+      origin_id || delivery.origin_id,
+    );
 
-      if (!origin) {
-        throw new AppError('This origin does not exist');
-      }
-
-      if (origin.user_id !== user_id) {
-        throw new AppError('You does not have this origin');
-      }
+    if (origin.user_id !== user_id) {
+      throw new AppError('You does not have this origin');
     }
 
-    if (recipient_id) {
-      const recipientsRepository = getCustomRepository(RecipientRepository);
-      const recipient = await recipientsRepository.findById(recipient_id);
+    const recipientsRepository = getCustomRepository(RecipientRepository);
+    const recipient = await recipientsRepository.findById(
+      recipient_id || delivery.recipient_id,
+    );
 
-      if (!recipient) {
-        throw new AppError('This recipient does not exist');
-      }
-
-      if (recipient.user_id !== user_id) {
-        throw new AppError('You does not have this recipient');
-      }
+    if (recipient.user_id !== user_id) {
+      throw new AppError('You does not have this recipient');
     }
 
     delivery.deliveryman_id = deliveryman_id || delivery.deliveryman_id;
@@ -87,7 +70,14 @@ class UpdateDeliveryService {
 
     await deliveriesRepository.save(delivery);
 
-    return delivery;
+    const deliveryResponse = {
+      ...delivery,
+      deliveryman,
+      origin,
+      recipient,
+    };
+
+    return deliveryResponse;
   }
 }
 

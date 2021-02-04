@@ -15,10 +15,6 @@ class DeleteDeliveryService {
 
     const delivery = await deliveriesRepository.findById(deliveryId);
 
-    if (!delivery) {
-      throw new AppError('This delivery does not exist');
-    }
-
     if (delivery.user_id !== user_id) {
       throw new AppError(
         'You does not have permission to delete this delivery',
