@@ -19,10 +19,6 @@ class DeleteDeliverymanAvatarService {
 
     const deliveryman = await deliverymenRepository.findById(deliverymanId);
 
-    if (!deliveryman) {
-      throw new AppError('This deliveryman does not exist');
-    }
-
     if (deliveryman.user_id !== user_id) {
       throw new AppError(
         'You does not have permission to delete this deliveryman',

@@ -49,18 +49,6 @@ class CreateDeliveryService {
     const origin = await originsRepository.findById(origin_id);
     const recipient = await recipientsRepository.findById(recipient_id);
 
-    if (!deliveryman) {
-      throw new AppError('This deliveryman does not exist');
-    }
-
-    if (!origin) {
-      throw new AppError('This origin does not exist');
-    }
-
-    if (!recipient) {
-      throw new AppError('This recipient does not exist');
-    }
-
     if (deliveryman.user_id !== user_id) {
       throw new AppError('You does not have this deliveryman');
     }
@@ -83,7 +71,14 @@ class CreateDeliveryService {
 
     await deliveriesRepository.save(delivery);
 
-    return delivery;
+    const deliveryResponse = {
+      ...delivery,
+      deliveryman,
+      origin,
+      recipient,
+    };
+
+    return deliveryResponse;
   }
 }
 

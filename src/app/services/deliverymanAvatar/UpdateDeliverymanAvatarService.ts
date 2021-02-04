@@ -15,10 +15,6 @@ class UpdateDeliverymanAvatarService {
 
     const deliveryman = await deliverymenRepository.findById(deliverymanId);
 
-    if (!deliveryman) {
-      throw new AppError('This deliveryman does not exist');
-    }
-
     if (deliveryman.avatar) {
       await uploadConfig.deleteUploadedFile(deliveryman.avatar);
     }

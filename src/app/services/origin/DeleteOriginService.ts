@@ -14,10 +14,6 @@ class DeleteOriginService {
 
     const origin = await originsRepository.findById(originId);
 
-    if (!origin) {
-      throw new AppError('This origin does not exist');
-    }
-
     if (origin.user_id !== user_id) {
       throw new AppError(
         'You does not have permission to delete this origin',
