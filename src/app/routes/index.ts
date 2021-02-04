@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import DeliveriesRouter from './deliveries.routes';
 import DeliverymenRouter from './deliverymen.routes';
 import OriginsRouter from './origins.routes';
 import RecipientsRouter from './recipients.routes';
@@ -8,6 +9,7 @@ import UsersRouter from './users.routes';
 
 const routes = Router();
 
+routes.use('/deliveries', DeliveriesRouter);
 routes.use('/deliverymen', DeliverymenRouter);
 routes.use('/origins', OriginsRouter);
 routes.use('/recipients', RecipientsRouter);

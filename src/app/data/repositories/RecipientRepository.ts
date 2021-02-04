@@ -10,7 +10,7 @@ class RecipientRepository extends Repository<Recipient> {
       const recipient = await this.findOne(id);
       return recipient;
     } catch {
-      throw new AppError('This is a invalid id');
+      throw new AppError(`This recipient's id is an invalid id`);
     }
   }
 }

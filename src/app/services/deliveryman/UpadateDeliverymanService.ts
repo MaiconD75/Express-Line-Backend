@@ -1,6 +1,7 @@
 import { getCustomRepository } from 'typeorm';
+
 import Deliveryman from '../../data/models/Deliveryman';
-import DeliverymanRepository from '../../data/repositories/DeliveryRepository';
+import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import AppError from '../../error/AppError';
 
 interface Request {
@@ -17,9 +18,9 @@ class UpdateDeliverymanService {
     email,
     name,
   }: Request): Promise<Deliveryman> {
-    const deliverymanRepository = getCustomRepository(DeliverymanRepository);
+    const deliverymenRepository = getCustomRepository(DeliverymanRepository);
 
-    const deliveryman = await deliverymanRepository.findById(deliverymanId);
+    const deliveryman = await deliverymenRepository.findById(deliverymanId);
 
     if (!deliveryman) {
       throw new AppError('This deliveryman does not exist');
@@ -32,10 +33,18 @@ class UpdateDeliverymanService {
       );
     }
 
+    const registeredEmail = await deliverymenRepository.findOne({
+      where: { email, user_id },
+    });
+
+    if (registeredEmail) {
+      throw new AppError('This email is already registered');
+    }
+
     deliveryman.email = email || deliveryman.email;
     deliveryman.name = name || deliveryman.name;
 
-    await deliverymanRepository.save(deliveryman);
+    await deliverymenRepository.save(deliveryman);
 
     return deliveryman;
   }

@@ -10,7 +10,7 @@ class OriginRepository extends Repository<Origin> {
       const origin = await this.findOne(id);
       return origin;
     } catch {
-      throw new AppError('This is a invalid id');
+      throw new AppError(`This origin's id is an invalid id`);
     }
   }
 }

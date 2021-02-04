@@ -2,7 +2,7 @@ import { getCustomRepository } from 'typeorm';
 import uploadConfig from '../../../config/upload';
 
 import Deliveryman from '../../data/models/Deliveryman';
-import DeliverymanRepository from '../../data/repositories/DeliveryRepository';
+import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import AppError from '../../error/AppError';
 
 class UpdateDeliverymanAvatarService {

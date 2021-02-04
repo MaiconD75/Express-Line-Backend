@@ -1,7 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 
 import uploadConfig from '../../../config/upload';
-import DeliverymanRepository from '../../data/repositories/DeliveryRepository';
+import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import AppError from '../../error/AppError';
 
 interface Request {
