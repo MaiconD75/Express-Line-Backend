@@ -4,9 +4,9 @@ import Deliveryman from '../../data/models/Deliveryman';
 
 class ListDeliverymenService {
   public async execute(id: string): Promise<Deliveryman[]> {
-    const deliverymanRepository = getRepository(Deliveryman);
+    const deliverymenRepository = getRepository(Deliveryman);
 
-    const deliverymanList = await deliverymanRepository.find({
+    const deliverymanList = await deliverymenRepository.find({
       where: { user_id: id },
     });
 

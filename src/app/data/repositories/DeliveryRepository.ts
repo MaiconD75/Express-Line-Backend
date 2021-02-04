@@ -1,19 +1,18 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import AppError from '../../error/AppError';
-import Deliveryman from '../models/Deliveryman';
+import Delivery from '../models/Delivery';
 
-@EntityRepository(Deliveryman)
-class DeliverymanRepository extends Repository<Deliveryman> {
-  public async findById(id: string): Promise<Deliveryman | undefined> {
+@EntityRepository(Delivery)
+class DeliveryRepository extends Repository<Delivery> {
+  public async findById(id: string): Promise<Delivery | undefined> {
     try {
-      const deliveryman = await this.findOne(id);
-
-      return deliveryman;
+      const delivery = await this.findOne(id);
+      return delivery;
     } catch {
-      throw new AppError('This is a invalid id');
+      throw new AppError(`This delivery's id is an invalid id`);
     }
   }
 }
 
-export default DeliverymanRepository;
+export default DeliveryRepository;
