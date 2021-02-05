@@ -1,10 +1,13 @@
 import {
+  Between,
   EntityRepository,
   getCustomRepository,
   IsNull,
   Not,
   Repository,
 } from 'typeorm';
+
+import { startOfDay, endOfDay } from 'date-fns';
 
 import AppError from '../../error/AppError';
 import Delivery from '../models/Delivery';
@@ -71,6 +74,20 @@ class DeliveryRepository extends Repository<Delivery> {
     } catch {
       throw new AppError(`This deliveryman's id is an invalid id`);
     }
+  }
+
+  public async findGetedDeliveriesInSameDay(
+    deliveryman_id: string,
+  ): Promise<Delivery[]> {
+    const currentDate = new Date();
+
+    const deliveries = await this.find({
+      where: {
+        start_date: Between(startOfDay(currentDate), endOfDay(currentDate)),
+        deliveryman_id,
+      },
+    });
+    return deliveries;
   }
 }
 

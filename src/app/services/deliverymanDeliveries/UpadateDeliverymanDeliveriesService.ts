@@ -1,48 +1,86 @@
 import { getCustomRepository } from 'typeorm';
+import { getHours } from 'date-fns';
 
-import Deliveryman from '../../data/models/Deliveryman';
-import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
+import uploadConfig from '../../../config/upload';
+import Delivery from '../../data/models/Delivery';
+
+import DeliveryRepository from '../../data/repositories/DeliveryRepository';
 import AppError from '../../error/AppError';
 
 interface Request {
-  user_id: string;
-  deliverymanId: string;
-  email?: string;
-  name?: string;
+  completOperation: boolean;
+  deliveryman_id: string;
+  delivery_id: string;
+  signatureFilename?: string;
 }
 
 class UpdateDeliverymanService {
   public async execute({
-    user_id,
-    deliverymanId,
-    email,
-    name,
-  }: Request): Promise<Deliveryman> {
-    const deliverymenRepository = getCustomRepository(DeliverymanRepository);
+    completOperation = false,
+    deliveryman_id,
+    delivery_id,
+    signatureFilename,
+  }: Request): Promise<Delivery> {
+    const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
-    const deliveryman = await deliverymenRepository.findById(deliverymanId);
+    const delivery = await deliveriesRepository.findById(delivery_id);
 
-    if (deliveryman.user_id !== user_id) {
+    if (!delivery) {
+      throw new AppError('This delivery does not exist');
+    }
+
+    if (delivery.deliveryman_id !== deliveryman_id) {
+      throw new AppError('You does not have access to this delivery', 401);
+    }
+
+    if (!completOperation) {
+      if (!delivery.start_date) {
+        const getedDeliveriesCount = await deliveriesRepository.findGetedDeliveriesInSameDay(
+          deliveryman_id,
+        );
+        const currentHour = getHours(new Date());
+
+        if (currentHour < 8 || currentHour >= 18) {
+          throw new AppError('You just can get a delivery from 8pm to 6pm');
+        }
+
+        if (getedDeliveriesCount.length >= 5) {
+          throw new AppError(
+            'A deliveryman just can get 5 deliveries at a day',
+          );
+        }
+
+        delivery.start_date = new Date();
+
+        await deliveriesRepository.save(delivery);
+      }
+      return delivery;
+    }
+
+    if (!signatureFilename) {
       throw new AppError(
-        'You does not have permission to delete this deliveryman',
-        401,
+        'A delivery just can be completed with a signature picture',
       );
     }
 
-    const registeredEmail = await deliverymenRepository.findOne({
-      where: { email, user_id },
-    });
-
-    if (registeredEmail) {
-      throw new AppError('This email is already registered');
+    if (!delivery.start_date) {
+      throw new AppError('A non started delivery does not can be completed');
     }
 
-    deliveryman.email = email || deliveryman.email;
-    deliveryman.name = name || deliveryman.name;
+    if (delivery.canceled_at) {
+      throw new AppError('A canceled delivery does not can be completed');
+    }
 
-    await deliverymenRepository.save(deliveryman);
+    if (delivery.signature) {
+      await uploadConfig.deleteUploadedFile(delivery.signature);
+    }
 
-    return deliveryman;
+    delivery.signature = signatureFilename;
+    delivery.end_date = new Date();
+
+    await deliveriesRepository.save(delivery);
+
+    return delivery;
   }
 }
 

@@ -15,7 +15,17 @@ const deliverymenDeliveriesController = new DeliverymenDeliveriesController();
 
 const upload = multer(uploadConfig);
 
-DeliverymenRoutes.get('/:id/deliveries', deliverymenDeliveriesController.index);
+DeliverymenRoutes.get('/:id/deliveries', deliverymenDeliveriesController.show);
+DeliverymenRoutes.patch(
+  '/:deliveryman_id/deliveries/:delivery_id',
+  deliverymenDeliveriesController.update,
+);
+
+DeliverymenRoutes.patch(
+  '/:deliveryman_id/deliveries/:delivery_id/complet',
+  upload.single('signature'),
+  deliverymenDeliveriesController.update,
+);
 
 DeliverymenRoutes.use(ensureAuthenticated);
 
