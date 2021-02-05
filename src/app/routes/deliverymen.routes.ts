@@ -3,6 +3,7 @@ import multer from 'multer';
 
 import DeliverymenController from '../controllers/deliverymenController';
 import DeliverymenAvatarsController from '../controllers/deliverymenAvatarsController';
+import DeliverymenDeliveriesController from '../controllers/deliverymenDeliveriesController';
 
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import uploadConfig from '../../config/upload';
@@ -10,8 +11,11 @@ import uploadConfig from '../../config/upload';
 const DeliverymenRoutes = Router();
 const deliverymenController = new DeliverymenController();
 const deliverymenAvatarsController = new DeliverymenAvatarsController();
+const deliverymenDeliveriesController = new DeliverymenDeliveriesController();
 
 const upload = multer(uploadConfig);
+
+DeliverymenRoutes.get('/:id/deliveries', deliverymenDeliveriesController.index);
 
 DeliverymenRoutes.use(ensureAuthenticated);
 

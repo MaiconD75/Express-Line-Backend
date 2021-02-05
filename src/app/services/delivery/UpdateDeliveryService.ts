@@ -70,14 +70,14 @@ class UpdateDeliveryService {
 
     await deliveriesRepository.save(delivery);
 
-    const deliveryResponse = {
-      ...delivery,
-      deliveryman,
-      origin,
-      recipient,
-    };
+    // const deliveryResponse = {
+    //   ...delivery,
+    //   deliveryman,
+    //   origin,
+    //   recipient,
+    // };
 
-    return deliveryResponse;
+    return delivery;
   }
 }
 

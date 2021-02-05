@@ -1,10 +1,10 @@
 import { getCustomRepository } from 'typeorm';
 
 import Delivery from '../../data/models/Delivery';
-import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
+// import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
-import OriginRepository from '../../data/repositories/OriginRepository';
-import RecipientRepository from '../../data/repositories/RecipientRepository';
+// import OriginRepository from '../../data/repositories/OriginRepository';
+// import RecipientRepository from '../../data/repositories/RecipientRepository';
 import AppError from '../../error/AppError';
 
 interface Request {
@@ -29,20 +29,7 @@ class GetDeliveryService {
       );
     }
 
-    const deliverymenRepository = getCustomRepository(DeliverymanRepository);
-    const originsRepository = getCustomRepository(OriginRepository);
-    const recipientsRepository = getCustomRepository(RecipientRepository);
-
-    const deliveryResponse = {
-      ...delivery,
-      deliveryman: await deliverymenRepository.findById(
-        delivery.deliveryman_id,
-      ),
-      origin: await originsRepository.findById(delivery.origin_id),
-      recipient: await recipientsRepository.findById(delivery.recipient_id),
-    };
-
-    return deliveryResponse;
+    return delivery;
   }
 }
 
