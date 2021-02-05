@@ -19,9 +19,9 @@ class DeliverymenDeliveriesController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const completOperation = request.path.split('/')[4] === 'complet';
     const signatureFilename = request.file?.filename;
     const { deliveryman_id, delivery_id } = request.params;
+    const { completOperation } = request.body;
 
     const updateDeliverymanDeliveriesService = new UpdateDeliverymanDeliveriesService();
     const delivery = await updateDeliverymanDeliveriesService.execute({
