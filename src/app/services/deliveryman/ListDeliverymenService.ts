@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { getRepository } from 'typeorm';
 import RedisCache from '../../../lib/Redis';
 
@@ -17,7 +18,7 @@ class ListDeliverymenService {
         where: { user_id: id },
       });
 
-      await cache.save(`deliverymen-list:${id}`, deliverymenList);
+      await cache.save(`deliverymen-list:${id}`, classToClass(deliverymenList));
     }
 
     return deliverymenList;
