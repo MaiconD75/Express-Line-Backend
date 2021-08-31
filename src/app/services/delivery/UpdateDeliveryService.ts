@@ -7,6 +7,7 @@ import RecipientRepository from '../../data/repositories/RecipientRepository';
 
 import Delivery from '../../data/models/Delivery';
 import AppError from '../../error/AppError';
+import RedisCache from '../../../lib/Redis';
 
 interface Request {
   user_id: string;
@@ -25,6 +26,7 @@ class UpdateDeliveryService {
     recipient_id,
     product,
   }: Request): Promise<Delivery> {
+    const cache = new RedisCache();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
     const delivery = await deliveriesRepository.findById(deliveryId);
@@ -67,6 +69,8 @@ class UpdateDeliveryService {
     delivery.origin = origin;
     delivery.recipient = recipient;
     delivery.product = product || delivery.product;
+
+    await cache.invalidate(`deliveries-list:${user_id}`);
 
     await deliveriesRepository.save(delivery);
 

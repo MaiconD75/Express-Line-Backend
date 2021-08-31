@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 
 import Delivery from '../../data/models/Delivery';
 import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
@@ -24,6 +25,7 @@ class CreateDeliveryService {
     recipient_id,
     product,
   }: Request): Promise<Delivery> {
+    const cache = new RedisCache();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
     if (!deliveryman_id) {
@@ -69,6 +71,8 @@ class CreateDeliveryService {
       recipient_id,
       product,
     });
+
+    await cache.invalidate(`deliveries-list:${user_id}`);
 
     await deliveriesRepository.save(delivery);
 
