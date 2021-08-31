@@ -10,7 +10,7 @@ const dbconfig =
         type: 'postgres',
         host: 'localhost',
         username: 'postgres',
-        password: 'docker',
+        password: 'postgres',
         database: 'expressline',
         port: 5432,
       };
