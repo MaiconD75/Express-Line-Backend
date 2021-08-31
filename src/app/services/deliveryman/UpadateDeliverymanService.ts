@@ -33,7 +33,7 @@ class UpdateDeliverymanService {
       where: { email, user_id },
     });
 
-    if (registeredEmail) {
+    if (registeredEmail && registeredEmail.id !== deliverymanId) {
       throw new AppError('This email is already registered');
     }
 
