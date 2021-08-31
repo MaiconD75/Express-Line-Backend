@@ -13,7 +13,7 @@ class GetDeliverymanDeliveriesService {
   public async execute({
     deliverymanId,
     completedDeliveries,
-  }: Request): Promise<Deliveryman> {
+  }: Request): Promise<Omit<Deliveryman, 'getAvatarUrl'>> {
     const deliverymenRepository = getCustomRepository(DeliverymanRepository);
 
     const deliveryman = await deliverymenRepository.findById(deliverymanId);

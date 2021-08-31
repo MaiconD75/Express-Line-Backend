@@ -35,9 +35,10 @@ class UpdateDeliverymanService {
 
     if (!completOperation) {
       if (!delivery.start_date) {
-        const getedDeliveriesCount = await deliveriesRepository.findGetedDeliveriesInSameDay(
-          deliveryman_id,
-        );
+        const getedDeliveriesCount =
+          await deliveriesRepository.findGetedDeliveriesInSameDay(
+            deliveryman_id,
+          );
         const currentHour = getHours(new Date());
 
         if (currentHour < 8 || currentHour >= 18) {
