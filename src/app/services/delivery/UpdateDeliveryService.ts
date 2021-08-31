@@ -31,7 +31,7 @@ class UpdateDeliveryService {
 
     if (delivery.user_id !== user_id) {
       throw new AppError(
-        'You does not have permission to delete this delivery',
+        'You does not have permission to update this delivery',
         401,
       );
     }
@@ -63,19 +63,12 @@ class UpdateDeliveryService {
       throw new AppError('You does not have this recipient');
     }
 
-    delivery.deliveryman_id = deliveryman_id || delivery.deliveryman_id;
-    delivery.origin_id = origin_id || delivery.origin_id;
-    delivery.recipient_id = recipient_id || delivery.recipient_id;
+    delivery.deliveryman = deliveryman;
+    delivery.origin = origin;
+    delivery.recipient = recipient;
     delivery.product = product || delivery.product;
 
     await deliveriesRepository.save(delivery);
-
-    // const deliveryResponse = {
-    //   ...delivery,
-    //   deliveryman,
-    //   origin,
-    //   recipient,
-    // };
 
     return delivery;
   }
