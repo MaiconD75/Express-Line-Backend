@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -36,6 +37,11 @@ class Deliveryman {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'avatar_url' })
+  getAvatarUrl(): string | null {
+    return this.avatar ? `http://localhost:3333/files/${this.avatar}` : null;
+  }
 }
 
 export default Deliveryman;

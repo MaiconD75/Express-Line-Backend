@@ -23,7 +23,8 @@ class DeliverymenDeliveriesController {
     const { deliveryman_id, delivery_id } = request.params;
     const { completOperation } = request.body;
 
-    const updateDeliverymanDeliveriesService = new UpdateDeliverymanDeliveriesService();
+    const updateDeliverymanDeliveriesService =
+      new UpdateDeliverymanDeliveriesService();
     const delivery = await updateDeliverymanDeliveriesService.execute({
       completOperation,
       deliveryman_id,
