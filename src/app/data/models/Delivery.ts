@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -26,6 +27,7 @@ class Delivery {
   user: User;
 
   @Column()
+  @Exclude()
   deliveryman_id: string;
 
   @ManyToOne(() => Deliveryman)
@@ -33,6 +35,7 @@ class Delivery {
   deliveryman: Deliveryman;
 
   @Column()
+  @Exclude()
   origin_id: string;
 
   @ManyToOne(() => Origin)
@@ -40,6 +43,7 @@ class Delivery {
   origin: Origin;
 
   @Column()
+  @Exclude()
   recipient_id: string;
 
   @ManyToOne(() => Recipient)
