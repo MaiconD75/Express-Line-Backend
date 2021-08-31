@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 
 import CreateDeliveryService from '../services/delivery/CreateDeliveryService';
@@ -20,7 +21,7 @@ class DeliveriesController {
       product,
     });
 
-    return response.status(200).json(delivery);
+    return response.status(200).json(classToClass(delivery));
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
@@ -40,7 +41,7 @@ class DeliveriesController {
     const getDeliveryService = new GetDeliveryService();
     const delivery = await getDeliveryService.execute({ deliveryId, user_id });
 
-    return response.json(delivery);
+    return response.status(200).json(classToClass(delivery));
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
@@ -49,7 +50,7 @@ class DeliveriesController {
     const listDeliveriesService = new ListDeliveriesService();
     const deliveriesList = await listDeliveriesService.execute(id);
 
-    return response.json(deliveriesList);
+    return response.json(classToClass(deliveriesList));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -67,7 +68,7 @@ class DeliveriesController {
       product,
     });
 
-    return response.json(delivery);
+    return response.json(classToClass(delivery));
   }
 }
 

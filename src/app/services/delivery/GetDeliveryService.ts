@@ -1,10 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 
 import Delivery from '../../data/models/Delivery';
-// import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
-// import OriginRepository from '../../data/repositories/OriginRepository';
-// import RecipientRepository from '../../data/repositories/RecipientRepository';
 import AppError from '../../error/AppError';
 
 interface Request {

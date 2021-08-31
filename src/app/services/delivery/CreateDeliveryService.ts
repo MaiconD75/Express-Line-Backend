@@ -1,7 +1,8 @@
-import { getCustomRepository, getRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 
 import Delivery from '../../data/models/Delivery';
 import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
+import DeliveryRepository from '../../data/repositories/DeliveryRepository';
 import OriginRepository from '../../data/repositories/OriginRepository';
 import RecipientRepository from '../../data/repositories/RecipientRepository';
 
@@ -23,7 +24,7 @@ class CreateDeliveryService {
     recipient_id,
     product,
   }: Request): Promise<Delivery> {
-    const deliveriesRepository = getRepository(Delivery);
+    const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
     if (!deliveryman_id) {
       throw new AppError(`deliveryman's id was not provided`);
@@ -71,14 +72,9 @@ class CreateDeliveryService {
 
     await deliveriesRepository.save(delivery);
 
-    const deliveryResponse = {
-      ...delivery,
-      deliveryman,
-      origin,
-      recipient,
-    };
+    const createdDelivery = deliveriesRepository.findById(delivery.id);
 
-    return deliveryResponse;
+    return createdDelivery;
   }
 }
 
