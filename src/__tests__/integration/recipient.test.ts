@@ -1,8 +1,8 @@
 import request from 'supertest';
 import faker from 'faker/locale/pt_BR';
 
-import app from '../../src/app';
-import connection from '../../src/database/connection';
+import app from '../../app';
+import connection from '../../database/connection';
 
 describe('Recipient', () => {
   beforeAll(async () => {
