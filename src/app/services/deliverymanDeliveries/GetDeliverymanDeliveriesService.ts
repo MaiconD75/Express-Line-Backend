@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
 import RedisCache from '../../../lib/Redis';
 import Delivery from '../../data/models/Delivery';
@@ -31,7 +32,7 @@ class GetDeliverymanDeliveriesService {
 
       await cache.save(
         `deliveryman-${cacheInfix}-deliveries-list:${deliverymanId}`,
-        deliveries,
+        classToClass(deliveries),
       );
     }
 

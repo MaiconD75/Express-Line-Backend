@@ -1,18 +1,9 @@
-import {
-  Between,
-  EntityRepository,
-  getCustomRepository,
-  IsNull,
-  Not,
-  Repository,
-} from 'typeorm';
+import { Between, EntityRepository, IsNull, Not, Repository } from 'typeorm';
 
 import { startOfDay, endOfDay } from 'date-fns';
 
 import AppError from '../../error/AppError';
 import Delivery from '../models/Delivery';
-import OriginRepository from './OriginRepository';
-import RecipientRepository from './RecipientRepository';
 
 @EntityRepository(Delivery)
 class DeliveryRepository extends Repository<Delivery> {
@@ -48,24 +39,19 @@ class DeliveryRepository extends Repository<Delivery> {
               created_at: 'ASC',
             },
           })
-        : await this.find({ where: { deliveryman_id, end_date: IsNull() } });
+        : await this.find({
+            where: { deliveryman_id, end_date: IsNull() },
+            relations: ['deliveryman', 'origin', 'recipient'],
+            order: {
+              created_at: 'ASC',
+            },
+          });
 
       if (!deliveries) {
         throw new AppError('This deliveryman does not have deliveries');
       }
 
-      const originsRepository = getCustomRepository(OriginRepository);
-      const recipientsRepository = getCustomRepository(RecipientRepository);
-
-      const deliveriesResponse = await Promise.all(
-        deliveries.map(async delivery => ({
-          ...delivery,
-          origin: await originsRepository.findById(delivery.origin_id),
-          recipient: await recipientsRepository.findById(delivery.recipient_id),
-        })),
-      );
-
-      return deliveriesResponse;
+      return deliveries;
     } catch {
       throw new AppError(`This deliveryman id is an invalid id`);
     }
