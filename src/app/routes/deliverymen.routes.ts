@@ -20,7 +20,7 @@ DeliverymenRoutes.get(
   deliverymenDeliveriesController.show,
 );
 DeliverymenRoutes.patch(
-  '/:deliveryman_id/deliveries/:delivery_id',
+  '/:deliveryman_id/deliveries/:delivery_id/update(/complet-operation)?',
   upload.single('signature'),
   deliverymenDeliveriesController.update,
 );
