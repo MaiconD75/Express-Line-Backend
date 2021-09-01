@@ -13,7 +13,7 @@ DeliveriesRoutes.post('/:id/problems', deliveryProblemsController.create);
 
 DeliveriesRoutes.use(ensureAuthenticated);
 
-// DeliveriesRoutes.get('/problems', deliveryProblemsController.show);
+DeliveriesRoutes.get('/problems', deliveryProblemsController.show);
 DeliveriesRoutes.get('/', deliveriesController.show);
 DeliveriesRoutes.get('/:id', deliveriesController.index);
 
