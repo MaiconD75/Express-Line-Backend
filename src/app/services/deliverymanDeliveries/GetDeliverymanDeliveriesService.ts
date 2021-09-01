@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 import Delivery from '../../data/models/Delivery';
 
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
@@ -13,12 +14,26 @@ class GetDeliverymanDeliveriesService {
     deliverymanId,
     completedDeliveries,
   }: Request): Promise<Delivery[]> {
+    const cache = new RedisCache();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
-    const deliveries = await deliveriesRepository.findByDeliveryman(
-      deliverymanId,
-      completedDeliveries,
+    const cacheInfix = completedDeliveries ? 'completed' : 'pending';
+
+    let deliveries = await cache.recover<Delivery[]>(
+      `deliveryman-${cacheInfix}-deliveries-list:${deliverymanId}`,
     );
+
+    if (!deliveries) {
+      deliveries = await deliveriesRepository.findByDeliveryman(
+        deliverymanId,
+        completedDeliveries,
+      );
+
+      await cache.save(
+        `deliveryman-${cacheInfix}-deliveries-list:${deliverymanId}`,
+        deliveries,
+      );
+    }
 
     return deliveries;
   }
