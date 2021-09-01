@@ -5,7 +5,7 @@ class ListDeliveryProblemService {
   public async execute(user_id: string): Promise<DeliveryProblem[]> {
     const deliveryProblemRepository = getRepository(DeliveryProblem);
 
-    const DeliveriesProblems = await deliveryProblemRepository.find({
+    const deliveriesProblems = await deliveryProblemRepository.find({
       where: {
         delivery: {
           user_id,
@@ -17,7 +17,7 @@ class ListDeliveryProblemService {
       },
     });
 
-    return DeliveriesProblems;
+    return deliveriesProblems;
   }
 }
 

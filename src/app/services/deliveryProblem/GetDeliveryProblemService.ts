@@ -5,7 +5,7 @@ class GetDeliveryProblemService {
   public async execute(delivery_id: string): Promise<DeliveryProblem[]> {
     const deliveryProblemRepository = getRepository(DeliveryProblem);
 
-    const DeliveriesProblems = await deliveryProblemRepository.find({
+    const deliveriesProblems = await deliveryProblemRepository.find({
       where: {
         delivery_id,
       },
@@ -15,7 +15,7 @@ class GetDeliveryProblemService {
       },
     });
 
-    return DeliveriesProblems;
+    return deliveriesProblems;
   }
 }
 

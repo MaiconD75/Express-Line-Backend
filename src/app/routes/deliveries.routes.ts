@@ -21,6 +21,9 @@ DeliveriesRoutes.delete('/:id', deliveriesController.delete);
 DeliveriesRoutes.put('/:id', deliveriesController.update);
 DeliveriesRoutes.post('/', deliveriesController.create);
 
-// DeliveriesRoutes.patch('/:id', deliveryProblemsController.update);
+DeliveriesRoutes.delete(
+  '/problem/:id/cancel-delivery',
+  deliveryProblemsController.delete,
+);
 
 export default DeliveriesRoutes;

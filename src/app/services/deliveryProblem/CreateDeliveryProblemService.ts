@@ -32,6 +32,18 @@ class CreateDeliveryProblemService {
       throw new AppError('You does not have this delivery');
     }
 
+    if (!delivery.start_date) {
+      throw new AppError(
+        'You does not can register a problem in a non started delivery',
+      );
+    }
+
+    if (delivery.end_date) {
+      throw new AppError(
+        'You does not can register a problem in a ended delivery',
+      );
+    }
+
     if (!description) {
       throw new AppError('The description was not provided');
     }

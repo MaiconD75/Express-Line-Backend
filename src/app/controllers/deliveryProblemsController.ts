@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import CreateDeliveryProblemService from '../services/deliveryProblem/CreateDeliveryProblemService';
 import ListDeliveryProblemService from '../services/deliveryProblem/ListDeliveryProblemService';
 import GetDeliveryProblemService from '../services/deliveryProblem/GetDeliveryProblemService';
+import DeleteDeliveryProblemService from '../services/deliveryProblem/DeleteDeliveryProblemService';
 
 class DeliveryProblemsController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -17,6 +18,17 @@ class DeliveryProblemsController {
     });
 
     return response.json(classToClass(deliveryProblem));
+  }
+
+  public async delete(request: Request, response: Response): Promise<Response> {
+    // Cancel delivery according problem id;
+
+    const { id } = request.params;
+
+    const deleteDeliveryProblemsService = new DeleteDeliveryProblemService();
+    const caceledDelivery = await deleteDeliveryProblemsService.execute(id);
+
+    return response.json(classToClass(caceledDelivery));
   }
 
   public async index(request: Request, response: Response): Promise<Response> {
@@ -38,8 +50,6 @@ class DeliveryProblemsController {
 
     return response.json(classToClass(deliveriesProblemslist));
   }
-
-  // public async update(request: Request, response: Response): Promise<Response> {}
 }
 
 export default DeliveryProblemsController;
