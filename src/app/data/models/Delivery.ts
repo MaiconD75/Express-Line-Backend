@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -25,6 +25,13 @@ class Delivery {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Expose({ name: 'signature_url' })
+  getSignatureUrl(): string | null {
+    return this.signature
+      ? `http://localhost:3333/files/${this.signature}`
+      : null;
+  }
 
   @Column()
   @Exclude()

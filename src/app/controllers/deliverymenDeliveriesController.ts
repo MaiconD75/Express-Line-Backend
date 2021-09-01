@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 
 import GetDeliverymanDeliveriesService from '../services/deliverymanDeliveries/GetDeliverymanDeliveriesService';
@@ -18,7 +19,7 @@ class DeliverymenDeliveriesController {
       completedDeliveries,
     });
 
-    return response.json(deliveries);
+    return response.json(classToClass(deliveries));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -38,7 +39,7 @@ class DeliverymenDeliveriesController {
       signatureFilename,
     });
 
-    return response.json(delivery);
+    return response.json(classToClass(delivery));
   }
 }
 
