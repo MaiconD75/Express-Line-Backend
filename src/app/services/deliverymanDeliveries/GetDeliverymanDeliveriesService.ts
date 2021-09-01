@@ -1,35 +1,26 @@
 import { getCustomRepository } from 'typeorm';
+import Delivery from '../../data/models/Delivery';
 
-import Deliveryman from '../../data/models/Deliveryman';
-import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
 
 interface Request {
   deliverymanId: string;
-  completedDeliveries: false;
+  completedDeliveries: boolean;
 }
 
 class GetDeliverymanDeliveriesService {
   public async execute({
     deliverymanId,
     completedDeliveries,
-  }: Request): Promise<Omit<Deliveryman, 'getAvatarUrl'>> {
-    const deliverymenRepository = getCustomRepository(DeliverymanRepository);
-
-    const deliveryman = await deliverymenRepository.findById(deliverymanId);
-
+  }: Request): Promise<Delivery[]> {
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
+
     const deliveries = await deliveriesRepository.findByDeliveryman(
       deliverymanId,
       completedDeliveries,
     );
 
-    const deliverymanResponse = {
-      ...deliveryman,
-      deliveries,
-    };
-
-    return deliverymanResponse;
+    return deliveries;
   }
 }
 

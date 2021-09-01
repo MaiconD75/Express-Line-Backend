@@ -7,15 +7,18 @@ class DeliverymenDeliveriesController {
   public async show(request: Request, response: Response): Promise<Response> {
     const deliverymanId = request.params.id;
 
-    const { completedDeliveries } = request.body;
+    const pathArray = request.path.split('/');
+    const completedDeliveries =
+      pathArray[pathArray.length - 1] === 'completed-deliveries';
 
-    const getDeliverymanService = new GetDeliverymanDeliveriesService();
-    const deliveryman = await getDeliverymanService.execute({
+    const getDeliverymanDeliveriesService =
+      new GetDeliverymanDeliveriesService();
+    const deliveries = await getDeliverymanDeliveriesService.execute({
       deliverymanId,
       completedDeliveries,
     });
 
-    return response.json(deliveryman);
+    return response.json(deliveries);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
