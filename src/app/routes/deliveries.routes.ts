@@ -9,7 +9,7 @@ const deliveriesController = new DeliveriesController();
 const deliveryProblemsController = new DeliveryProblemsController();
 
 DeliveriesRoutes.post('/:id/problems', deliveryProblemsController.create);
-// DeliveriesRoutes.get('/:id/problems/', deliveryProblemsController.index);
+DeliveriesRoutes.get('/:id/problems/', deliveryProblemsController.index);
 
 DeliveriesRoutes.use(ensureAuthenticated);
 
