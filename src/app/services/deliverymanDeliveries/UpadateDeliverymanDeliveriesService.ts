@@ -44,7 +44,7 @@ class UpdateDeliverymanDeliveriesService {
         const currentHour = getHours(new Date());
 
         if (currentHour < 8 || currentHour >= 18) {
-          throw new AppError('You just can get a delivery from 8pm to 6pm');
+          throw new AppError('You just can get a delivery from 8am to 6pm');
         }
 
         if (getedDeliveriesCount.length >= 5) {
@@ -54,6 +54,10 @@ class UpdateDeliverymanDeliveriesService {
         }
 
         delivery.start_date = new Date();
+
+        await cache.invalidate(
+          `deliveryman-pending-deliveries-list:${deliveryman_id}`,
+        );
 
         await deliveriesRepository.save(delivery);
       }
@@ -82,9 +86,7 @@ class UpdateDeliverymanDeliveriesService {
     delivery.end_date = new Date();
 
     await cache.invalidate(
-      `deliveryman-${
-        completOperation ? 'completed' : 'pending'
-      }-deliveries-list:${deliveryman_id}`,
+      `deliveryman-completed-deliveries-list:${deliveryman_id}`,
     );
 
     await deliveriesRepository.save(delivery);
