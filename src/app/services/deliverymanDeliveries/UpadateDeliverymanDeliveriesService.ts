@@ -6,6 +6,7 @@ import Delivery from '../../data/models/Delivery';
 
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
 import AppError from '../../error/AppError';
+import RedisCache from '../../../lib/Redis';
 
 interface Request {
   completOperation: boolean;
@@ -21,6 +22,7 @@ class UpdateDeliverymanDeliveriesService {
     delivery_id,
     signatureFilename,
   }: Request): Promise<Delivery> {
+    const cache = new RedisCache();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
     const delivery = await deliveriesRepository.findById(delivery_id);
@@ -78,6 +80,12 @@ class UpdateDeliverymanDeliveriesService {
 
     delivery.signature = signatureFilename;
     delivery.end_date = new Date();
+
+    await cache.invalidate(
+      `deliveryman-${
+        completOperation ? 'completed' : 'pending'
+      }-deliveries-list:${deliveryman_id}`,
+    );
 
     await deliveriesRepository.save(delivery);
 
