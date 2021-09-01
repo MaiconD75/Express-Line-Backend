@@ -15,7 +15,7 @@ class RecipientRepository extends Repository<Recipient> {
 
       return recipient;
     } catch {
-      throw new AppError(`This recipient's id is an invalid id`);
+      throw new AppError(`This recipient id is an invalid id`);
     }
   }
 }

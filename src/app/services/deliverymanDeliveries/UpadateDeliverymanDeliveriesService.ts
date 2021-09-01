@@ -14,7 +14,7 @@ interface Request {
   signatureFilename?: string;
 }
 
-class UpdateDeliverymanService {
+class UpdateDeliverymanDeliveriesService {
   public async execute({
     completOperation = false,
     deliveryman_id,
@@ -85,4 +85,4 @@ class UpdateDeliverymanService {
   }
 }
 
-export default UpdateDeliverymanService;
+export default UpdateDeliverymanDeliveriesService;
