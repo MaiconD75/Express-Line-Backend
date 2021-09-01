@@ -28,7 +28,7 @@ class DeliveryRepository extends Repository<Delivery> {
 
       return delivery;
     } catch {
-      throw new AppError(`This delivery's id is an invalid id`);
+      throw new AppError(`This delivery id is an invalid id`);
     }
   }
 
@@ -67,7 +67,7 @@ class DeliveryRepository extends Repository<Delivery> {
 
       return deliveriesResponse;
     } catch {
-      throw new AppError(`This deliveryman's id is an invalid id`);
+      throw new AppError(`This deliveryman id is an invalid id`);
     }
   }
 

@@ -15,7 +15,7 @@ class OriginRepository extends Repository<Origin> {
 
       return origin;
     } catch {
-      throw new AppError(`This origin's id is an invalid id`);
+      throw new AppError(`This origin id is an invalid id`);
     }
   }
 }

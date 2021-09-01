@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -16,6 +17,7 @@ class DeliveryProblem {
   id: string;
 
   @Column()
+  @Exclude()
   delivery_id: string;
 
   @ManyToOne(() => Delivery)

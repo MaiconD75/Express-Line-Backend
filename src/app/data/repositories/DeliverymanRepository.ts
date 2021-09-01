@@ -15,7 +15,7 @@ class DeliverymanRepository extends Repository<Deliveryman> {
 
       return deliveryman;
     } catch {
-      throw new AppError(`This deliveryman's id is an invalid id`);
+      throw new AppError(`This deliveryman id is an invalid id`);
     }
   }
 }
