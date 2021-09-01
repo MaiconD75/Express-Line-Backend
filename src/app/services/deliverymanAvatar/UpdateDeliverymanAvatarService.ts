@@ -9,11 +9,15 @@ class UpdateDeliverymanAvatarService {
   public async execute(
     deliverymanId: string,
     user_id: string,
-    avatarFilename: string,
+    avatarFilename?: string,
   ): Promise<Deliveryman> {
     const deliverymenRepository = getCustomRepository(DeliverymanRepository);
 
     const deliveryman = await deliverymenRepository.findById(deliverymanId);
+
+    if (!avatarFilename) {
+      throw new AppError('Avatar does not provided');
+    }
 
     if (deliveryman.avatar) {
       await uploadConfig.deleteUploadedFile(deliveryman.avatar);
