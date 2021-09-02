@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 
 import DeleteDeliverymanAvatarService from '../services/deliverymanAvatar/DeleteDeliverymanAvatar';
@@ -16,7 +17,7 @@ class deliverymenAvatarsController {
       avatarFilename,
     );
 
-    return response.json(deliveryman);
+    return response.json(classToClass(deliveryman));
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
@@ -29,7 +30,7 @@ class deliverymenAvatarsController {
       user_id,
     });
 
-    return response.json(deliveryman);
+    return response.json(classToClass(deliveryman));
   }
 }
 
