@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 
 import Origin from '../../data/models/Origin';
 import OriginRepository from '../../data/repositories/OriginRepository';
@@ -27,6 +28,7 @@ class UpdateOriginService {
     state,
     zip_code,
   }: Request): Promise<Origin> {
+    const cache = new RedisCache();
     const originsRepository = getCustomRepository(OriginRepository);
 
     const origin = await originsRepository.findById(originId);
@@ -44,6 +46,8 @@ class UpdateOriginService {
     origin.city = city || origin.city;
     origin.state = state || origin.state;
     origin.zip_code = zip_code || origin.zip_code;
+
+    await cache.invalidate(`origins-list:${user_id}`);
 
     await originsRepository.save(origin);
 

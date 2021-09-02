@@ -1,4 +1,6 @@
+import { classToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 import Delivery from '../../data/models/Delivery';
 import DeliveryProblemRepository from '../../data/repositories/DeliveryProblemRepository';
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
@@ -6,6 +8,7 @@ import AppError from '../../error/AppError';
 
 class DeleteDeliveryProblemService {
   public async execute(problem_id: string): Promise<Delivery> {
+    const cache = new RedisCache();
     const deliveryProblemRepository = getCustomRepository(
       DeliveryProblemRepository,
     );
@@ -33,7 +36,9 @@ class DeleteDeliveryProblemService {
 
     delivery.canceled_at = new Date();
 
-    await deliveryRepository.save(delivery);
+    await cache.invalidate(`deliveries-list:${delivery.user_id}`);
+
+    await deliveryRepository.save(classToClass(delivery));
 
     return delivery;
   }

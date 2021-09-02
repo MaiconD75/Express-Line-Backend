@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 import Recipient from '../../data/models/Recipient';
 import AppError from '../../error/AppError';
 
@@ -24,6 +25,7 @@ class CreateRecipientService {
     state,
     zip_code,
   }: Request): Promise<Recipient> {
+    const cache = new RedisCache();
     const recipientsRepository = getRepository(Recipient);
 
     if (!name) {
@@ -47,6 +49,8 @@ class CreateRecipientService {
       state,
       zip_code,
     });
+
+    await cache.invalidate(`recipients-list:${user_id}`);
 
     await recipientsRepository.save(recipient);
 
