@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 
 import OriginRepository from '../../data/repositories/OriginRepository';
 import AppError from '../../error/AppError';
@@ -10,6 +11,7 @@ interface Request {
 
 class DeleteOriginService {
   public async execute({ user_id, originId }: Request): Promise<void> {
+    const cache = new RedisCache();
     const originsRepository = getCustomRepository(OriginRepository);
 
     const origin = await originsRepository.findById(originId);
@@ -20,6 +22,8 @@ class DeleteOriginService {
         401,
       );
     }
+
+    await cache.invalidate(`origins-list:${user_id}`);
 
     await originsRepository.delete(origin.id);
   }

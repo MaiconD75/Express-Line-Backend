@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 
 import Origin from '../../data/models/Origin';
 import AppError from '../../error/AppError';
@@ -23,6 +24,7 @@ class CreateOriginService {
     state,
     zip_code,
   }: Request): Promise<Origin> {
+    const cache = new RedisCache();
     const originsRepository = getRepository(Origin);
 
     const emptyRequiredFields =
@@ -41,6 +43,8 @@ class CreateOriginService {
       state,
       zip_code,
     });
+
+    await cache.invalidate(`origins-list:${user_id}`);
 
     await originsRepository.save(origin);
 
