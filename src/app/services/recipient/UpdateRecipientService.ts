@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 
 import Recipient from '../../data/models/Recipient';
 import RecipientRepository from '../../data/repositories/RecipientRepository';
@@ -28,6 +29,7 @@ class UpdateRecipientService {
     state,
     zip_code,
   }: Request): Promise<Recipient> {
+    const cache = new RedisCache();
     const recipientsRepository = getCustomRepository(RecipientRepository);
 
     const recipient = await recipientsRepository.findById(recipientId);
@@ -46,6 +48,8 @@ class UpdateRecipientService {
     recipient.city = city || recipient.city;
     recipient.state = state || recipient.state;
     recipient.zip_code = zip_code || recipient.zip_code;
+
+    await cache.invalidate(`recipients-list:${user_id}`);
 
     await recipientsRepository.save(recipient);
 

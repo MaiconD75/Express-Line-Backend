@@ -15,8 +15,6 @@ class ListOriginsService {
         where: { user_id: id },
       });
 
-      console.log('é');
-
       await cache.save(`origins-list:${id}`, originsList);
     }
 

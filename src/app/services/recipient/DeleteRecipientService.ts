@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 
 import RecipientRepository from '../../data/repositories/RecipientRepository';
 import AppError from '../../error/AppError';
@@ -10,6 +11,7 @@ interface Request {
 
 class DeleteRecipientService {
   public async execute({ user_id, recipientId }: Request): Promise<void> {
+    const cache = new RedisCache();
     const recipientsRepository = getCustomRepository(RecipientRepository);
 
     const recipient = await recipientsRepository.findById(recipientId);
@@ -20,6 +22,8 @@ class DeleteRecipientService {
         401,
       );
     }
+
+    await cache.invalidate(`recipients-list:${user_id}`);
 
     await recipientsRepository.delete(recipient.id);
   }
