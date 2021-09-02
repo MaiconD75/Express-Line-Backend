@@ -7,7 +7,7 @@ class deliverymenAvatarsController {
   public async update(request: Request, response: Response): Promise<Response> {
     const deliverymanId = request.params.id;
     const user_id = request.user.id;
-    const avatarFilename = request.file.filename;
+    const avatarFilename = request.file?.filename;
 
     const updateDeliverymanAvatarService = new UpdateDeliverymanAvatarService();
     const deliveryman = await updateDeliverymanAvatarService.execute(
