@@ -1,5 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import uploadConfig from '../../../config/upload';
+import RedisCache from '../../../lib/Redis';
 
 import Deliveryman from '../../data/models/Deliveryman';
 import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
@@ -11,12 +12,13 @@ class UpdateDeliverymanAvatarService {
     user_id: string,
     avatarFilename?: string,
   ): Promise<Deliveryman> {
+    const cache = new RedisCache();
     const deliverymenRepository = getCustomRepository(DeliverymanRepository);
 
     const deliveryman = await deliverymenRepository.findById(deliverymanId);
 
     if (!avatarFilename) {
-      throw new AppError('Avatar does not provided');
+      throw new AppError('Avatar was not provided');
     }
 
     if (deliveryman.avatar) {
@@ -31,6 +33,8 @@ class UpdateDeliverymanAvatarService {
     }
 
     deliveryman.avatar = avatarFilename;
+
+    await cache.invalidate(`deliverymen-list:${user_id}`);
 
     await deliverymenRepository.save(deliveryman);
 

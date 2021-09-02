@@ -1,6 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 
 import uploadConfig from '../../../config/upload';
+import RedisCache from '../../../lib/Redis';
 import Deliveryman from '../../data/models/Deliveryman';
 import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
 import AppError from '../../error/AppError';
@@ -15,6 +16,7 @@ class DeleteDeliverymanAvatarService {
     user_id,
     deliverymanId,
   }: Request): Promise<Deliveryman> {
+    const cache = new RedisCache();
     const deliverymenRepository = getCustomRepository(DeliverymanRepository);
 
     const deliveryman = await deliverymenRepository.findById(deliverymanId);
@@ -33,6 +35,8 @@ class DeleteDeliverymanAvatarService {
     await uploadConfig.deleteUploadedFile(deliveryman.avatar);
 
     deliveryman.avatar = '';
+
+    await cache.invalidate(`deliverymen-list:${user_id}`);
 
     await deliverymenRepository.save(deliveryman);
 
