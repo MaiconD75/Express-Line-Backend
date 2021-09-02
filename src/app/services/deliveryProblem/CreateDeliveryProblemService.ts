@@ -1,5 +1,5 @@
-import { classToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
+import RedisCache from '../../../lib/Redis';
 import DeliveryProblem from '../../data/models/DeliveryProblem';
 import DeliveryProblemRepository from '../../data/repositories/DeliveryProblemRepository';
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
@@ -17,6 +17,7 @@ class CreateDeliveryProblemService {
     delivery_id,
     description,
   }: Request): Promise<DeliveryProblem> {
+    const cache = new RedisCache();
     const deliveryProblemRepository = getCustomRepository(
       DeliveryProblemRepository,
     );
@@ -53,13 +54,17 @@ class CreateDeliveryProblemService {
       description,
     });
 
+    await cache.invalidate(`deliveries-problems-list:${delivery.user_id}`);
+
+    await cache.invalidate(`delivery-problems-list:${delivery_id}`);
+
     await deliveryProblemRepository.save(deliveryProblem);
 
     const createdDeliveryProblem = await deliveryProblemRepository.findById(
       deliveryProblem.id,
     );
 
-    return classToClass(createdDeliveryProblem);
+    return createdDeliveryProblem;
   }
 }
 
