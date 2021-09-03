@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { getCustomRepository } from 'typeorm';
 import RedisCache from '../../../lib/Redis';
 import EtherealMail from '../../../lib/EtherealMail';
@@ -29,6 +30,16 @@ class CreateDeliveryService {
     const cache = new RedisCache();
     const mail = new EtherealMail();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
+
+    const templatePath = resolve(
+      __dirname,
+      '..',
+      '..',
+      'views',
+      'emails',
+      'newDelivery',
+      'index.hbs',
+    );
 
     if (!deliveryman_id) {
       throw new AppError(`deliveryman's id was not provided`);
@@ -80,10 +91,18 @@ class CreateDeliveryService {
 
     const createdDelivery = deliveriesRepository.findById(delivery.id);
 
+    const variables = {
+      deliverymanName: deliveryman.name,
+      product,
+      recipientName: recipient.name,
+      link: `http://localhost:3333/users/forgotten-password/${delivery.id}`,
+    };
+
     await mail.sendMail(
       deliveryman.email,
-      'Nova entrega',
-      `Uma nova entrega foi cadastrada.\nO produto já está pronto para a entrega.\nProduto: ${product}.\n\nConfira mais detalhes no site.`,
+      'Nova encomenda',
+      templatePath,
+      variables,
     );
 
     return createdDelivery;
