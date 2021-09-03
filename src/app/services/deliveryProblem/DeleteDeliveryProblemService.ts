@@ -37,6 +37,10 @@ class DeleteDeliveryProblemService {
       throw new AppError('You does not can cancel a ended delivery');
     }
 
+    if (delivery.canceled_at) {
+      throw new AppError('This delivery is already canceled');
+    }
+
     delivery.canceled_at = new Date();
 
     await cache.invalidate(`deliveries-list:${delivery.user_id}`);
