@@ -40,7 +40,11 @@ class DeliveryRepository extends Repository<Delivery> {
             },
           })
         : await this.find({
-            where: { deliveryman_id, end_date: IsNull() },
+            where: {
+              deliveryman_id,
+              end_date: IsNull(),
+              canceled_at: IsNull(),
+            },
             relations: ['deliveryman', 'origin', 'recipient'],
             order: {
               created_at: 'ASC',

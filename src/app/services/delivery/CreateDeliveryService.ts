@@ -1,5 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import RedisCache from '../../../lib/Redis';
+import EtherealMail from '../../../lib/EtherealMail';
 
 import Delivery from '../../data/models/Delivery';
 import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
@@ -26,6 +27,7 @@ class CreateDeliveryService {
     product,
   }: Request): Promise<Delivery> {
     const cache = new RedisCache();
+    const mail = new EtherealMail();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
 
     if (!deliveryman_id) {
@@ -77,6 +79,12 @@ class CreateDeliveryService {
     await deliveriesRepository.save(delivery);
 
     const createdDelivery = deliveriesRepository.findById(delivery.id);
+
+    await mail.sendMail(
+      deliveryman.email,
+      'Nova entrega',
+      `Uma nova entrega foi cadastrada.\nO produto já está pronto para a entrega.\nProduto: ${product}.\n\nConfira mais detalhes no site.`,
+    );
 
     return createdDelivery;
   }
