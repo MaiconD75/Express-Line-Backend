@@ -26,6 +26,10 @@ class CreateSessionService {
       throw new AppError('The email and password does not match', 401);
     }
 
+    if (!user.verified) {
+      throw new AppError('You need to confirm your email.');
+    }
+
     const passwordMatched = await compare(password, user.password_hash);
 
     if (!passwordMatched) {

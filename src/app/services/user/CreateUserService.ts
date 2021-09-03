@@ -1,9 +1,11 @@
 import { getRepository } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { classToClass } from 'class-transformer';
+import { resolve } from 'path';
 
 import User from '../../data/models/User';
 import AppError from '../../error/AppError';
+import EtherealMail from '../../../lib/EtherealMail';
 
 interface Request {
   email: string;
@@ -13,7 +15,18 @@ interface Request {
 
 class CreateUserService {
   public async execute({ email, name, password }: Request): Promise<User> {
+    const mail = new EtherealMail();
     const usersRepository = getRepository(User);
+
+    const templatePath = resolve(
+      __dirname,
+      '..',
+      '..',
+      'views',
+      'emails',
+      'confirmEmail',
+      'index.hbs',
+    );
 
     if (!email) {
       throw new AppError('Email was not provided');
@@ -44,6 +57,19 @@ class CreateUserService {
     });
 
     await usersRepository.save(user);
+
+    const variables = {
+      userName: user.name,
+      confirmLink: `http://localhost:3333/users/confirm-email/${user.id}`,
+      unconfirmLink: `http://localhost:3333/users/${user.id}`,
+    };
+
+    await mail.sendMail(
+      user.email,
+      'Confirme seu email',
+      templatePath,
+      variables,
+    );
 
     return classToClass(user);
   }

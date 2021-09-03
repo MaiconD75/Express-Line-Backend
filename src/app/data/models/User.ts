@@ -19,6 +19,9 @@ class User {
   name: string;
 
   @Column()
+  verified: boolean;
+
+  @Column()
   @Exclude()
   password_hash: string;
 
