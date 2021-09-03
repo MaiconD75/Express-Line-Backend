@@ -29,7 +29,7 @@ export default class CreateUserToken1630673657493
           },
           {
             name: 'expires_date',
-            type: 'timestamp',
+            type: 'timestamp with time zone',
           },
           {
             name: 'created_at',
