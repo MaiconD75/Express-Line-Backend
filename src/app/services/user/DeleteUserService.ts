@@ -1,12 +1,10 @@
 import { getRepository } from 'typeorm';
-import bcrypt from 'bcryptjs';
-import { classToClass } from 'class-transformer';
 
 import User from '../../data/models/User';
 import AppError from '../../error/AppError';
 
 class DeleteUserService {
-  public async execute(id: string): Promise<User> {
+  public async execute(id: string): Promise<void> {
     const usersRepository = getRepository(User);
 
     const [user] = await usersRepository.findByIds([id]);
@@ -15,9 +13,7 @@ class DeleteUserService {
       throw new AppError('Invalid id');
     }
 
-    await usersRepository.delete(user);
-
-    return classToClass(user);
+    await usersRepository.delete(user.id);
   }
 }
 

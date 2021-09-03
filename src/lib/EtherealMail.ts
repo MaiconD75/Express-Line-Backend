@@ -1,4 +1,6 @@
 import nodemailer, { Transporter } from 'nodemailer';
+import fs from 'fs';
+import handlebars from 'handlebars';
 
 class EtherealMail {
   private client: Transporter;
@@ -17,13 +19,21 @@ class EtherealMail {
   public async sendMail(
     to: string,
     subject: string,
-    body: string,
+    templatePath: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    variables: any,
   ): Promise<void> {
+    const templateFileContent = fs.readFileSync(templatePath).toString('utf-8');
+
+    const templateParse = handlebars.compile(templateFileContent);
+
+    const templateHTML = templateParse(variables);
+
     await this.client.sendMail({
       from: 'Equipe ExpressLine <equipe@expressline.com.br',
       to,
       subject,
-      text: body,
+      html: templateHTML,
     });
   }
 }
