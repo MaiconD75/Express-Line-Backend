@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import User from './User';
 
-@Entity('users')
+@Entity('user_tokens')
 class UserToken {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,7 +27,7 @@ class UserToken {
   user: User;
 
   @Column()
-  expires_at: Date;
+  expires_date: Date;
 
   @CreateDateColumn()
   created_at: Date;
