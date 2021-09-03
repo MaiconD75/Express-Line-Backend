@@ -95,7 +95,7 @@ class CreateDeliveryService {
       deliverymanName: deliveryman.name,
       product,
       recipientName: recipient.name,
-      link: `http://localhost:3333/users/forgotten-password/${delivery.id}`,
+      link: `http://localhost:3333/deliveries/${delivery.id}`,
     };
 
     await mail.sendMail(
