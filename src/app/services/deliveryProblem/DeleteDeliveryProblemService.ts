@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { classToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
 import EtherealMail from '../../../lib/EtherealMail';
@@ -13,6 +14,16 @@ class DeleteDeliveryProblemService {
     const mail = new EtherealMail();
     const deliveryProblemRepository = getCustomRepository(
       DeliveryProblemRepository,
+    );
+
+    const templatePath = resolve(
+      __dirname,
+      '..',
+      '..',
+      'views',
+      'emails',
+      'canceledDelivery',
+      'index.hbs',
     );
 
     const deliveryRepository = getCustomRepository(DeliveryRepository);
@@ -47,10 +58,19 @@ class DeleteDeliveryProblemService {
 
     await deliveryRepository.save(classToClass(delivery));
 
+    const variables = {
+      deliverymanName: delivery.deliveryman.name,
+      product: delivery.product,
+      recipientName: delivery.recipient.name,
+      description: deliveryProblem.description,
+      link: `http://localhost:3333/deliveries/${delivery.id}`,
+    };
+
     await mail.sendMail(
       delivery.deliveryman.email,
-      'Nova entrega',
-      `Entrega para ${delivery.recipient.name} de um(a) ${delivery.product} foi cancelado.\nMotívo do cancelamento: ${deliveryProblem.description}.`,
+      'Entrega Cancelada',
+      templatePath,
+      variables,
     );
 
     return delivery;
