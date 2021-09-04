@@ -1,27 +1,15 @@
-import { resolve } from 'path';
 import { getRepository } from 'typeorm';
 import dayjs from 'dayjs';
+import Queue from '../../../lib/Queue';
 
 import User from '../../data/models/User';
 import AppError from '../../error/AppError';
 import UserToken from '../../data/models/UserToken';
-import EtherealMail from '../../../lib/EtherealMail';
 
 class CreateUserTokenService {
   public async execute(email: string): Promise<UserToken> {
-    const mail = new EtherealMail();
     const userTokensRepository = getRepository(UserToken);
     const usersRepository = getRepository(User);
-
-    const templatePath = resolve(
-      __dirname,
-      '..',
-      '..',
-      'views',
-      'emails',
-      'resetPassword',
-      'index.hbs',
-    );
 
     if (!email) {
       throw new AppError('Email was not provided.');
@@ -57,17 +45,11 @@ class CreateUserTokenService {
       },
     );
 
-    const variables = {
+    await Queue.add('ResetPassword', {
       userName: user.name,
-      link: `http://localhost:3333/users/forgotten-password/${user.id}`,
-    };
-
-    await mail.sendMail(
-      user.email,
-      'Redefinição de senha',
-      templatePath,
-      variables,
-    );
+      email,
+      userId: user.id,
+    });
 
     return createdToken;
   }
