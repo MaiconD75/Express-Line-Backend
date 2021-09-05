@@ -1,29 +1,18 @@
-import { resolve } from 'path';
 import { classToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
-import EtherealMail from '../../../lib/EtherealMail';
+
 import RedisCache from '../../../lib/Redis';
 import Delivery from '../../data/models/Delivery';
 import DeliveryProblemRepository from '../../data/repositories/DeliveryProblemRepository';
 import DeliveryRepository from '../../data/repositories/DeliveryRepository';
 import AppError from '../../error/AppError';
+import Queue from '../../../lib/Queue';
 
 class DeleteDeliveryProblemService {
   public async execute(problem_id: string): Promise<Delivery> {
     const cache = new RedisCache();
-    const mail = new EtherealMail();
     const deliveryProblemRepository = getCustomRepository(
       DeliveryProblemRepository,
-    );
-
-    const templatePath = resolve(
-      __dirname,
-      '..',
-      '..',
-      'views',
-      'emails',
-      'canceledDelivery',
-      'index.hbs',
     );
 
     const deliveryRepository = getCustomRepository(DeliveryRepository);
@@ -58,20 +47,14 @@ class DeleteDeliveryProblemService {
 
     await deliveryRepository.save(classToClass(delivery));
 
-    const variables = {
+    await Queue.add('CanceledDelivery', {
+      email: delivery.deliveryman.email,
       deliverymanName: delivery.deliveryman.name,
       product: delivery.product,
       recipientName: delivery.recipient.name,
       description: deliveryProblem.description,
-      link: `http://localhost:3333/deliveries/${delivery.id}`,
-    };
-
-    await mail.sendMail(
-      delivery.deliveryman.email,
-      'Entrega Cancelada',
-      templatePath,
-      variables,
-    );
+      deliveryId: delivery.deliveryman_id,
+    });
 
     return delivery;
   }

@@ -1,7 +1,5 @@
-import { resolve } from 'path';
 import { getCustomRepository } from 'typeorm';
 import RedisCache from '../../../lib/Redis';
-import EtherealMail from '../../../lib/EtherealMail';
 
 import Delivery from '../../data/models/Delivery';
 import DeliverymanRepository from '../../data/repositories/DeliverymanRepository';
@@ -10,6 +8,7 @@ import OriginRepository from '../../data/repositories/OriginRepository';
 import RecipientRepository from '../../data/repositories/RecipientRepository';
 
 import AppError from '../../error/AppError';
+import Queue from '../../../lib/Queue';
 
 interface Request {
   user_id: string;
@@ -28,18 +27,7 @@ class CreateDeliveryService {
     product,
   }: Request): Promise<Delivery> {
     const cache = new RedisCache();
-    const mail = new EtherealMail();
     const deliveriesRepository = getCustomRepository(DeliveryRepository);
-
-    const templatePath = resolve(
-      __dirname,
-      '..',
-      '..',
-      'views',
-      'emails',
-      'newDelivery',
-      'index.hbs',
-    );
 
     if (!deliveryman_id) {
       throw new AppError(`deliveryman's id was not provided`);
@@ -91,19 +79,13 @@ class CreateDeliveryService {
 
     const createdDelivery = deliveriesRepository.findById(delivery.id);
 
-    const variables = {
+    await Queue.add('NewDelivery', {
+      email: deliveryman.email,
       deliverymanName: deliveryman.name,
       product,
       recipientName: recipient.name,
-      link: `http://localhost:3333/deliveries/${delivery.id}`,
-    };
-
-    await mail.sendMail(
-      deliveryman.email,
-      'Nova encomenda',
-      templatePath,
-      variables,
-    );
+      deliveryId: deliveryman_id,
+    });
 
     return createdDelivery;
   }

@@ -4,8 +4,11 @@ import Bull from 'bull';
 import cacheConfig from '../config/cache';
 
 import ResetPassword from '../app/jobs/ResetPassword';
+import ConfirmEmail from '../app/jobs/ConfirmEmail';
+import NewDelivery from '../app/jobs/NewDelivery';
+import CanceledDelivery from '../app/jobs/CanceledDelivery';
 
-const jobs = [ResetPassword];
+const jobs = [ResetPassword, ConfirmEmail, NewDelivery, CanceledDelivery];
 
 interface Queues {
   [x: string]: {

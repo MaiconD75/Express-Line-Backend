@@ -1,6 +1,6 @@
 import EtherealMail from '../../lib/EtherealMail';
 
-interface ConfirmMailData {
+interface ResetPasswordData {
   userName: string;
   email: string;
   userId: string;
@@ -11,7 +11,7 @@ class ResetPassword {
     return 'ResetPassword';
   }
 
-  async handle(data: ConfirmMailData) {
+  async handle(data: ResetPasswordData) {
     const { userName, email, userId } = data;
 
     const mail = new EtherealMail();
