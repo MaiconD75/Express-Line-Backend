@@ -5,8 +5,9 @@ import cacheConfig from '../config/cache';
 
 import ResetPassword from '../app/jobs/ResetPassword';
 import ConfirmEmail from '../app/jobs/ConfirmEmail';
+import NewDelivery from '../app/jobs/NewDelivery';
 
-const jobs = [ResetPassword, ConfirmEmail];
+const jobs = [ResetPassword, ConfirmEmail, NewDelivery];
 
 interface Queues {
   [x: string]: {
