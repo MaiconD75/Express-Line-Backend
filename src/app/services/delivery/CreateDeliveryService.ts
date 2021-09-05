@@ -81,7 +81,7 @@ class CreateDeliveryService {
 
     await Queue.add('NewDelivery', {
       email: deliveryman.email,
-      deliverymanName: deliveryman.id,
+      deliverymanName: deliveryman.name,
       product,
       recipientName: recipient.name,
       deliveryId: deliveryman_id,
