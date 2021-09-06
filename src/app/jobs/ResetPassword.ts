@@ -18,7 +18,7 @@ class ResetPassword {
 
     await mail.sendMail(email, 'Redefinição de senha', 'resetPassword', {
       userName,
-      link: `http://localhost:3333/users/forgotten-password/${userId}`,
+      link: `${process.env.APP_WEB_URL}/users/forgotten-password/${userId}`,
     });
   }
 }
