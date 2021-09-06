@@ -13,6 +13,10 @@ class DeleteUserService {
       throw new AppError('Invalid id');
     }
 
+    if (user.verified) {
+      throw new AppError('You just can delete a user to unconfirm email');
+    }
+
     await usersRepository.delete(user.id);
   }
 }
