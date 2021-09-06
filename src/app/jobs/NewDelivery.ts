@@ -22,7 +22,7 @@ class NewDelivery {
       deliverymanName,
       product,
       recipientName,
-      link: `http://localhost:3333/deliveries/${deliveryId}`,
+      link: `${process.env.APP_WEB_URL}/deliveryman-page/deliveries/${deliveryId}`,
     });
   }
 }

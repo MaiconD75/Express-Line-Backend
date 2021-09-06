@@ -18,8 +18,8 @@ class ConfirmEmail {
 
     await mail.sendMail(email, 'Confirme seu email', 'confirmEmail', {
       userName,
-      confirmLink: `http://localhost:3333/users/confirm-email/${userId}`,
-      unconfirmLink: `http://localhost:3333/users/${userId}`,
+      confirmLink: `${process.env.APP_WEB_URL}/users/confirm-email/${userId}`,
+      unconfirmLink: `${process.env.APP_WEB_URL}/users/unconfirm-email/${userId}`,
     });
   }
 }
