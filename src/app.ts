@@ -5,6 +5,7 @@ import cors from 'cors';
 import 'express-async-errors';
 
 import './database';
+import { errors } from 'celebrate';
 import AppError from './app/error/AppError';
 
 import routes from './app/routes';
@@ -24,6 +25,8 @@ app.get('/', (req, res) => {
     msg: `Hello World! I'm ExpressLine, your favorite fictional carrier! :D`,
   });
 });
+
+app.use(errors());
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   if (err instanceof AppError) {
