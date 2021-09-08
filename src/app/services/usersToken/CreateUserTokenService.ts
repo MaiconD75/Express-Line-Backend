@@ -45,10 +45,12 @@ class CreateUserTokenService {
       },
     );
 
+    console.log(createdToken.token);
+
     await Queue.add('ResetPassword', {
       userName: user.name,
       email,
-      userId: user.id,
+      userToken: createdToken.token,
     });
 
     return createdToken;
