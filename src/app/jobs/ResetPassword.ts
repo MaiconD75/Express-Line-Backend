@@ -3,7 +3,7 @@ import EtherealMail from '../../lib/EtherealMail';
 interface ResetPasswordData {
   userName: string;
   email: string;
-  userId: string;
+  userToken: string;
 }
 
 class ResetPassword {
@@ -12,13 +12,13 @@ class ResetPassword {
   }
 
   async handle(data: ResetPasswordData) {
-    const { userName, email, userId } = data;
+    const { userName, email, userToken } = data;
 
     const mail = new EtherealMail();
 
     await mail.sendMail(email, 'Redefinição de senha', 'resetPassword', {
       userName,
-      link: `${process.env.APP_WEB_URL}/users/forgotten-password/${userId}`,
+      link: `${process.env.APP_WEB_URL}/users/forgotten-password/${userToken}`,
     });
   }
 }

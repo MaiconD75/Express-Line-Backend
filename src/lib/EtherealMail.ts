@@ -11,8 +11,8 @@ class EtherealMail {
       host: 'smtp.ethereal.email',
       port: 587,
       auth: {
-        user: 'peyton.lowe72@ethereal.email',
-        pass: 'GjABaatbfg3n2TWC4j',
+        user: process.env.ETHEREAL_USER,
+        pass: process.env.ETHEREAL_PASS,
       },
     });
   }

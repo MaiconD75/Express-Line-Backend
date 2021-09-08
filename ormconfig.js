@@ -1,3 +1,6 @@
+/* eslint-disable radix */
+require('dotenv/config');
+
 const dbconfig =
   process.env.NODE_ENV === 'test'
     ? {
@@ -9,8 +12,8 @@ const dbconfig =
         host: process.env.DB_HOST,
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
-        database: process.DB_NAME,
-        port: process.env.DB_PORT,
+        database: process.env.DB_NAME,
+        port: Number(process.env.DB_PORT),
       };
 
 module.exports = {
