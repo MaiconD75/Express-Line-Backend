@@ -37,7 +37,7 @@ OriginsRoutes.put(
     [Segments.BODY]: {
       street: Joi.string().required(),
       number: Joi.number().required(),
-      complement: Joi.string(),
+      complement: Joi.string().allow(null, ''),
       city: Joi.string().required(),
       state: Joi.string().required(),
       zip_code: Joi.number().required(),
@@ -51,7 +51,7 @@ OriginsRoutes.post(
     [Segments.BODY]: {
       street: Joi.string().required(),
       number: Joi.number().required(),
-      complement: Joi.string(),
+      complement: Joi.string().allow(null, ''),
       city: Joi.string().required(),
       state: Joi.string().required(),
       zip_code: Joi.number().required(),
