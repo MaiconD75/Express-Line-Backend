@@ -10,10 +10,10 @@ A tool to manage your deliveries and delivery men from your business
 
 With this API you can hire deliverymen and define recipients and origins to register new deliveries.
 
-As a deliveryman you can get the product and register the product to delivery and register the end of delivery with a picture of recipient signature
+As a delivery man you can get the product and register the product to delivery and register the end of delivery with a picture of recipient signature
 in addition to being able to inform problems with delivery for your cancellation.
 
-A deliveryman just can start 5 deliveries per day at 8:00 AM to 18:00 PM.
+A delivery man is only able to do 5 deliveries per day at 8:00 AM to 18:00 PM.
 
 ## Entities
 * ### Users
