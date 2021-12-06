@@ -4,7 +4,7 @@ Status: development ⚠
 
 ## What is
 
-A tool to manage your business deliveries and deliverymen
+A tool to manage your deliveries and delivery men from your business
 
 ## About
 
