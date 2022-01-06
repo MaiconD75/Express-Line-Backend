@@ -18,7 +18,7 @@ A delivery man is only able to do 5 deliveries per day at 8:00 AM to 18:00 PM.
 ## Entities
 * ### Users
   * id: uuid;  
-  * email: uuid;  
+  * email: varchar;  
   * name: varchar;
   * password_has: varchar;
   * created_at: timestamp;  
